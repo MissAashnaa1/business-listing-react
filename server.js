@@ -7,4 +7,7 @@ app.get("/", (req, res) => {
   res.send("server up and running");
 });
 
-app.listen(port, (err) => {});
+app.listen(port, (error) => {
+  if (error) console.log(error);
+  console.log("Server running on port " + port);
+});
