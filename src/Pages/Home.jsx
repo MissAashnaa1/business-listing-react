@@ -1,5 +1,5 @@
-import { Box, Container } from "@chakra-ui/react";
-import React from "react";
+import { Box, Container, Divider } from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
 import Header from "../Components/Header";
 import SearchComp from "../Components/SearchComp";
 import CarouslNCards from "../Components/CarouslNCards";
@@ -8,23 +8,48 @@ import LgCards from "../Components/LgCards";
 import LgCadsTwo from "../Components/LgCadsTwo";
 import SocialLinks from "../Components/SocialLinks";
 import Footer from "../Components/Footer";
+import Welcome from "../Components/Welcome";
+import AccordionComp from "../Components/AccordionComp";
+import Profile from "../Components/Profile";
+import { Toaster } from "react-hot-toast";
+import Feedback from "../Components/Feedback";
+import ReactGA from "react-ga";
 
 const Home = () => {
+  const [showMain, setShowMain] = useState(true);
+  const handleToggle = () => setShowMain(!showMain);
+
+  useEffect(() => {
+    ReactGA.pageview(window.location.pathname);
+  }, []);
   return (
-    <Container maxW="100%" bg={"white"}>
-      <Header />
-      <SearchComp />
-      <Box display={{ base: "none", md: "block" }}>
-        <CarouslNCards />
-      </Box>
-      <Box>
-        <IconsComp />
-      </Box>
-      <LgCards />
-      <LgCadsTwo />
-      <SocialLinks />
-      <Footer />
-    </Container>
+    <>
+      <Toaster />
+      {showMain ? (
+        <Container maxW="100%">
+          <Header handleToggle={handleToggle} />
+          <SearchComp />
+          <Box display={{ base: "none", md: "block" }}>
+            <CarouslNCards />
+          </Box>
+          <Box>
+            <IconsComp />
+          </Box>
+          <LgCards />
+          <LgCadsTwo />
+          <SocialLinks />
+          <Divider />
+          <Welcome />
+
+          <Feedback />
+
+          <AccordionComp />
+          <Footer />
+        </Container>
+      ) : (
+        <Profile handleToggle={handleToggle} />
+      )}
+    </>
   );
 };
 

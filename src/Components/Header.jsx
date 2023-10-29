@@ -1,10 +1,16 @@
 import React from "react";
 import { HiSpeakerphone } from "react-icons/hi";
-import { BsBell, BsGraphUpArrow, BsPersonXFill } from "react-icons/bs";
+import {
+  BsBell,
+  BsGraphUpArrow,
+  BsPersonXFill,
+  BsPersonFill,
+} from "react-icons/bs";
 import {
   Box,
   Button,
   ButtonGroup,
+  Icon,
   Link,
   Menu,
   MenuButton,
@@ -13,8 +19,14 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { ChevronDownIcon, HamburgerIcon } from "@chakra-ui/icons";
+import LoginModal from "../modals/LoginModal";
+import SigninModal from "../modals/SigninModal";
+import { useSelector } from "react-redux";
+import ToggleColorMode from "./ToggleColorMode";
 
-const Header = () => {
+const Header = ({ handleToggle }) => {
+  const { isAuthenticated, user } = useSelector((state) => state.counter);
+
   return (
     <Box
       display={"flex"}
@@ -69,13 +81,35 @@ const Header = () => {
           <Button variant={"ghost"} size="sm" px={"1"}>
             <BsBell />
           </Button>
-          <Button variant={"solid"} size="sm" px={"1"}>
-            Login / Signup
-          </Button>
+          <ToggleColorMode />
+
+          {isAuthenticated ? (
+            <Text>{user.username}</Text>
+          ) : (
+            <>
+              <LoginModal>
+                <Button variant={"solid"} size="sm" px={"1"}>
+                  Login
+                </Button>
+              </LoginModal>
+              <SigninModal>
+                <Button variant={"solid"} size="sm" px={"1"}>
+                  Signup
+                </Button>
+              </SigninModal>
+            </>
+          )}
         </ButtonGroup>
       </Box>
 
       <Box display={{ base: "block", md: "none" }}>
+        <Button
+          rounded={"full"}
+          bg="transparent"
+          onClick={() => handleToggle()}
+        >
+          <Icon as={BsPersonFill} />
+        </Button>
         <Menu>
           <MenuButton as={Button} variant={"unstyled"}>
             <HamburgerIcon />
