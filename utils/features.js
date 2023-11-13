@@ -31,7 +31,7 @@ const sendAdminCookies = (res, admin, message, statusCode = 200) => {
     .cookie("token", token, {
       httpOnly: true,
       // maxAge: 24 * 60 * 60 * 1000, // active time
-      maxAge: 1 * 10 * 60 * 1000, // active time
+      maxAge: 12 * 60 * 60 * 1000, // active time
       sameSite: process.env.NODE_ENV === "Development" ? "lax" : "none",
       secure: process.env.NODE_ENV === "Development" ? false : true,
     })

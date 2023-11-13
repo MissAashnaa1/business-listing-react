@@ -18,7 +18,7 @@ const io = require("socket.io")(server, {
 
 app.set("io", io);
 io.on("connection", (socket) => {
-  console.log("A user connected to WebSocket");
+  console.log("A user connected to WebSocket", socket.id);
 
   socket.on("setup", (data) => {
     console.log(data, "< data from frontend Received");

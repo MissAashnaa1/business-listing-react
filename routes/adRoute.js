@@ -1,10 +1,7 @@
 const express = require("express");
-const {
-  getAdBanners,
-  createAdBanner,
-} = require("../controllers/adControllers");
+const { getAdBannersBL } = require("../controllers/adControllers");
 const router = express.Router();
 
-router.get("/", getAdBanners).post("/", createAdBanner);
+router.get("/", getAdBannersBL);
 
 module.exports = router;

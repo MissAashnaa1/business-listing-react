@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Email Verification Status</title>
+    <style>
+      body {
+        margin: 0 auto;
+        max-width: 600px;
+        padding: 20px;
+      }
+
+      .container {
+        margin: 0 auto;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      h1 {
+        color: #333;
+      }
+
+      p {
+        color: #555;
+      }
+
+      .success {
+        color: green;
+      }
+
+      .error {
+        color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Email Verification Status</h1>
+      <% if (status === 'success') { %>
+      <p class="success">Your email has been successfully verified.</p>
+      <% } else if (status === 'already-verified') { %>
+      <p class="error">Your email has already been verified.</p>
+      <% } else if (status === 'error') { %>
+      <p class="error">
+        There was an error verifying your email. Please try again later.
+      </p>
+      <% } else { %>
+      <p class="error">Invalid status.</p>
+      <% } %>
+    </div>
+  </body>
+</html>

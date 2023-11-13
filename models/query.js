@@ -8,10 +8,11 @@ const querySchema = new mongoose.Schema(
     message: { type: String, required: true, trim: true, max: 300 },
     date: { type: String, required: true, trim: true },
     time: { type: String, required: true, trim: true },
+    active: { type: Boolean, required: true, default: true },
   },
   { timestamps: true }
 );
 
-const Query = mongoose.model("Query", querySchema);
+const QueryMsg = mongoose.model("QueryMsg", querySchema);
 
-module.exports = Query;
+module.exports = QueryMsg;

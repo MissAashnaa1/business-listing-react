@@ -1,7 +1,7 @@
-const { default: axios } = require("axios");
-const sendEMail = require("../utils/sendEMail");
-const Query = require("../models/query");
+const axios = require("axios");
 const todayDate = require("../utils/todayDate");
+const QueryMsg = require("../models/query");
+const { sendEMail } = require("../utils/sendEMail");
 
 const mailHandler = async (req, res) => {
   const { firstName, lastName, email, message } = req.body;
@@ -11,13 +11,28 @@ const mailHandler = async (req, res) => {
       .json({ success: false, msg: "Please provide all the details" });
   }
 
+  // const newMsg = await QueryMsg.create({
+  //   firstName,
+  //   lastName,
+  //   email,
+  //   message,
+  //   date: todayDate().date,
+  //   time: todayDate().time,
+  // });
+
+  // const io = req.app.get("io");
+  // io.emit("haveSomethingToSay", newMsg);
+
+  // res.status(200).json({ success: true, msg: "mail sent successfully" });
+  // return;
+
   try {
     const { data: verification } = await axios.get(
       `https://client.bulkemailverifier.com/api/singlemaildetails?secret=${process.env.MAIL_VERIFIER_KEY}&email=${email}`
     );
     if (verification && verification.success) {
       if (verification.result === "valid") {
-        const newMsg = await Query.create({
+        const newMsg = await QueryMsg.create({
           firstName,
           lastName,
           email,

@@ -1,6 +1,10 @@
 const User = require("../models/user");
+const ServiceProvider = require("../models/serviceProvider");
 const bcrypt = require("bcrypt");
 const { sendCookies } = require("../utils/features");
+const axios = require("axios");
+const AppliedAds = require("../models/appliedAds");
+const { sendEmailAppliedAd } = require("../utils/sendEMail");
 
 const createUser = async (req, res) => {
   try {
@@ -76,4 +80,94 @@ const logout = (req, res) => {
   }
 };
 
-module.exports = { createUser, loginUser, logout, getMyProfile };
+const checkEmailValidity = async (req, res) => {
+  const { email } = req.body;
+  if (!email) return res.json({ success: false, msg: "Email is not valid" });
+  try {
+    const { data: verification } = await axios.get(
+      `https://client.bulkemailverifier.com/api/singlemaildetails?secret=${process.env.MAIL_VERIFIER_KEY}&email=${email}`
+    );
+    if (verification && verification.success) {
+      if (verification.result === "valid") {
+        const serviceProvider = await ServiceProvider.findOne({
+          email: email,
+        });
+        if (serviceProvider)
+          return res.json({
+            success: false,
+            msg: "Email already exists",
+          });
+
+        return res.json({ success: true, msg: "Email is valid" });
+      } else {
+        return res.json({
+          success: false,
+          msg: "Email is not valid",
+        });
+      }
+    } else {
+      return res.json({
+        success: false,
+        msg: "Email is not valid",
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    return res.json({ success: false, msg: "Email is not valid 3", error });
+  }
+};
+
+const applyForAd = async (req, res) => {
+  const { userId, adLabel, adImage, planObj } = req.body;
+
+  if (!userId || !adLabel || !adImage || !planObj) {
+    return res.status(400).json({ msg: "Please enter all fields" });
+  }
+
+  try {
+    const newAppliedAd = await AppliedAds.create({
+      userId,
+      adLabel,
+      adURL: adImage,
+      adPlanId: planObj.value,
+    });
+
+    console.log(newAppliedAd);
+
+    const io = req.app.get("io");
+
+    io.emit("newAppliedAdToAdmin", { newAppliedAd });
+    const user = await User.findById(userId);
+    if (user) {
+      sendEmailAppliedAd(user.username, user.email);
+    }
+    res.status(201).json({ success: true, newAppliedAd });
+  } catch (error) {
+    console.log(error, "error in applyForAd");
+    res.status(500).json({ msg: "Internal Server Error" });
+  }
+};
+
+const getAppliedAds = async (req, res) => {
+  try {
+    const appliedAds = await AppliedAds.find({ userId: req.user._id })
+      .populate("adPlanId")
+      .sort({
+        createdAt: -1,
+      });
+    res.status(200).json({ success: true, appliedAds });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ success: false, msg: "Server error" });
+  }
+};
+
+module.exports = {
+  getAppliedAds,
+  createUser,
+  loginUser,
+  logout,
+  getMyProfile,
+  checkEmailValidity,
+  applyForAd,
+};

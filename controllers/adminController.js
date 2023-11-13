@@ -2,6 +2,12 @@ const Admin = require("../models/admin");
 const bcrypt = require("bcrypt");
 const { sendAdminCookies } = require("../utils/features");
 const SiteSettings = require("../models/siteSettings");
+const QueryMsg = require("../models/query");
+const todayDate = require("../utils/todayDate");
+const AdBanner = require("../models/adBanner");
+const AdPlans = require("../models/adPlans");
+const AppliedAds = require("../models/appliedAds");
+const User = require("../models/user");
 
 const loginAdmin = async (req, res) => {
   const { username, password } = req.body;
@@ -73,15 +79,6 @@ const logout = async (req, res) => {
   res.status(200).json({ success: true, msg: "Logged out" });
 };
 
-const sendToken = (admin, statusCode, res) => {
-  const token = admin.getSignedToken();
-  res.cookie("token", token, {
-    expires: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000),
-    httpOnly: true,
-  });
-  res.status(statusCode).json({ success: true, token });
-};
-
 const getAdmin = async (req, res) => {
   try {
     const admin = await Admin.findById(req.admin._id).select("-password");
@@ -137,6 +134,97 @@ const updateSiteSettings = async (req, res) => {
   }
 };
 
+const getMessages = async (req, res) => {
+  try {
+    const messages = await QueryMsg.find({}).sort({
+      createdAt: -1,
+    });
+    res.status(200).json({ success: true, messages });
+  } catch (err) {
+    res.status(500).json({ success: false, msg: "Server error" });
+  }
+};
+
+const getAdBannersAdmin = async (req, res) => {
+  try {
+    const adBanners = await AdBanner.find({}).sort({ createdAt: -1 });
+    res.status(200).json({ success: true, adBanners });
+  } catch (err) {
+    res.status(500).json({ success: false, msg: "Server error" });
+  }
+};
+
+const getAdPlans = async (req, res) => {
+  try {
+    const plans = await AdPlans.find();
+    res.json({ success: true, plans: plans });
+  } catch (error) {
+    res.status(500).json({ msg: "Interval server error", error: error });
+  }
+};
+
+const createAdPlans = async (req, res) => {
+  const { name, price, durationDays } = req.body;
+  if (!name || !price || !durationDays) {
+    return res
+      .status(400)
+      .json({ success: false, msg: "Please enter all fields" });
+  }
+  try {
+    const newPlan = await AdPlans.create({ name, price, durationDays });
+    res.status(201).json({ success: true, newPlan });
+  } catch (error) {
+    console.log(error, "error in createAdPlans");
+    res.status(500).json({ msg: "Internal Server Error" });
+  }
+};
+
+const deleteAdPlan = async (req, res) => {
+  const { id } = req.params;
+  console.log(req.params, "params");
+  if (!id) {
+    return res.status(400).json({ success: false, msg: "Please enter id" });
+  }
+  try {
+    const deletedPlan = await AdPlans.findByIdAndDelete(id);
+    res.status(201).json({ success: true, deletedPlan });
+  } catch (error) {
+    console.log(error, "error in deleteAdPlan");
+    res.status(500).json({ msg: "Internal Server Error" });
+  }
+};
+
+const getAppliedAdsAll = async (req, res) => {
+  try {
+    let appliedAds = await AppliedAds.find({}).populate("adPlanId").sort({
+      createdAt: -1,
+    });
+
+    appliedAds = await User.populate(appliedAds, {
+      path: "userId",
+      select: "username email",
+    });
+    return res.json({ success: true, appliedAds: appliedAds });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ msg: "Internal server error", error: error });
+  }
+};
+
+const approveAd = async (req, res) => {
+  const { id, status } = req.body;
+
+  try {
+    const ad = await AppliedAds.findById(id);
+    ad.isApproved = status;
+
+    await ad.save();
+    return res.json({ success: true, msg: "Ad approved" });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 module.exports = {
   loginAdmin,
   createProfile,
@@ -146,4 +234,11 @@ module.exports = {
   getAdmins,
   getAdminById,
   getAdminProfile,
+  getMessages,
+  getAdBannersAdmin,
+  getAdPlans,
+  createAdPlans,
+  deleteAdPlan,
+  getAppliedAdsAll,
+  approveAd,
 };
