@@ -17,7 +17,6 @@ import Developers from "./Components/Developers";
 import TopService from "./Components/TopService";
 
 ReactGA.initialize(ANALYTICS_ID);
-ReactGA.pageview(window.location.pathname + window.location.search);
 
 const socket = io("http://localhost:4000");
 

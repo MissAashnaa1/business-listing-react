@@ -66,6 +66,11 @@ const LoginModal = ({ children }) => {
   };
 
   const handleLoginClick = () => {
+    ReactGA.event({
+      category: "Login",
+      action: "Login clicked",
+      label: "test lablel login btn",
+    });
     onOpen();
     ReactGA.event({
       category: "Login",

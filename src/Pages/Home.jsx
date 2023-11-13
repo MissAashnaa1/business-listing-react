@@ -23,6 +23,7 @@ const Home = () => {
   useEffect(() => {
     ReactGA.pageview(window.location.pathname);
   }, []);
+
   return (
     <>
       <Toaster />
