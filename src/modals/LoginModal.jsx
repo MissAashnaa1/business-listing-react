@@ -41,7 +41,7 @@ const LoginModal = ({ children }) => {
       setLoading(true);
 
       const res = await axios.post(
-        `http://localhost:4000/api/user/login`,
+        `${BASE_URL}/api/v1/user/login`,
         {
           username,
           password,
@@ -72,7 +72,6 @@ const LoginModal = ({ children }) => {
       action: "Login clicked",
 
       label: "test lablel login btn",
-      value: "some value login btn",
     });
   };
 

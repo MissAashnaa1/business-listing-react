@@ -10,6 +10,54 @@ import {
 import React from "react";
 
 const Welcome = () => {
+  const data = [
+    {
+      heading: "All India",
+      text: "Elevate your search for B2B requisites. From lead generation to promoting and selling products/services, enables enterprises to reach vast audiences all across India. Embracing digital strategies,  offering convenience in the B2B market space and empowering businesses nationwide.",
+    },
+    {
+      heading: "Packers & Movers",
+      text: "If you’re relocating to another place, or even if you just want to send some belongings elsewhere, find the best deals on the most reliable packers and movers for your location. Get quotes from multiple agencies, read reviews from previous customers, and check ratings before making a selection for a hassle-free experience.",
+    },
+    {
+      heading: "Order Food Online",
+      text: "You are just three clicks away from placing an order and exploring a wide range of exotic cuisines. Order food online with Justdial and get your favourite food delivered at your doorstep. Search for restaurants, view reviews and ratings, avail discounts and order your food.",
+    },
+
+    {
+      heading: "Jobs",
+      text: "Providing pertinent jobs to job seekers and relevant profiles to employers, this service will help you reach out to employers and vice-versa across industry verticals, experience levels and geographies.",
+    },
+    {
+      heading: "Movies",
+      text: "This gives you access to book tickets and keep updated with the latest movies. With the provision of a synopsis, cast, crew and trailer, you can make a better choice in the movie you would like to watch.",
+    },
+    {
+      heading: "Travel",
+      text: "This service facilitates you to book domestic and international flights on platform. You can also book hotels and holiday packages through this section.",
+    },
+    {
+      heading: "SPA & Salon",
+      text: "Skip the wait to get pampered at a spa or a salon. In a few clicks, 'Book an Appointment' online through Justdial before your next visit.",
+    },
+    {
+      heading: "Repain & Services",
+      text: "Skip the wait to get pampered at a spa or a salon. In a few clicks, 'Book an Appointment' online through Justdial before your next visit.",
+    },
+    {
+      heading: "Doctor Appointment",
+      text: "Find the suitable medical specialist to take care of your health and well-being. Healthcare made easy.",
+    },
+    {
+      heading: "Real Estate & Property",
+      text: "Discover the power of our cohesive platform for simplified property searches. Whether your interest lies in PG, rentals, buying, or selling, you can connect with trusted agents and developers and stay updated on upcoming or trending residential and commercial projects.",
+    },
+    {
+      heading: "Online Recharge/Bill Payment",
+      text: "With the help of this service you can stay on track in making your bill payments and recharges without having to wait in a queue. This includes bill payments for gas, electricity, data card, DTH, landline, etc.",
+    },
+  ];
+
   return (
     <Box
       mt={14}
@@ -53,170 +101,16 @@ const Welcome = () => {
         are :
       </Text>
       <SimpleGrid columns={{ base: 1, md: 3, lg: 4 }} spacing={10} mt={10}>
-        <Card>
-          <CardBody>
-            <Heading as={"h3"} fontSize={"xl"}>
-              B2B
-            </Heading>
-            <Text>
-              Experience the ultimate B2B portal by Justdial. You can explore
-              countless diverse categories, innumerable top-quality vendors, and
-              an unmatched wholesale experience. You'll find everything you need
-              for B2B requirements on this exclusive platform. Our interactive
-              interface allows you to apply relevant filters, ascertain the best
-              rates, and get instant assistance via chat.
-            </Text>
-          </CardBody>
-        </Card>
-
-        <Card>
-          <CardBody>
-            <Heading as={"h3"} fontSize={"xl"}>
-              All India
-            </Heading>
-            <Text>
-              Elevate your search for B2B requisites. From lead generation to
-              promoting and selling products/services, Justdial enables
-              enterprises to reach vast audiences all across India. Embracing
-              digital strategies, Justdial India encompasses manufacturers,
-              dealers, suppliers, vendors, wholesalers, and more, offering
-              convenience in the B2B market space and empowering businesses
-              nationwide.
-            </Text>
-          </CardBody>
-        </Card>
-
-        <Card>
-          <CardBody>
-            <Heading as={"h3"} fontSize={"xl"}>
-              Packers & Movers
-            </Heading>
-            <Text>
-              If you’re relocating to another place, or even if you just want to
-              send some belongings elsewhere, find the best deals on the most
-              reliable packers and movers for your location. Get quotes from
-              multiple agencies, read reviews from previous customers, and check
-              ratings before making a selection for a hassle-free experience.
-            </Text>
-          </CardBody>
-        </Card>
-
-        <Card>
-          <CardBody>
-            <Heading as={"h3"} fontSize={"xl"}>
-              Order Food Online
-            </Heading>
-            <Text>
-              You are just three clicks away from placing an order and exploring
-              a wide range of exotic cuisines. Order food online with Justdial
-              and get your favourite food delivered at your doorstep. Search for
-              restaurants, view reviews and ratings, avail discounts and order
-              your food.
-            </Text>
-          </CardBody>
-        </Card>
-
-        <Card>
-          <CardBody>
-            <Heading as={"h3"} fontSize={"xl"}>
-              Jobs
-            </Heading>
-            <Text>
-              Providing pertinent jobs to job seekers and relevant profiles to
-              employers, this service will help you reach out to employers and
-              vice-versa across industry verticals, experience levels and
-              geographies.
-            </Text>
-          </CardBody>
-        </Card>
-        <Card>
-          <CardBody>
-            <Heading as={"h3"} fontSize={"xl"}>
-              Movies
-            </Heading>
-            <Text>
-              This gives you access to book tickets and keep updated with the
-              latest movies. With the provision of a synopsis, cast, crew and
-              trailer, you can make a better choice in the movie you would like
-              to watch.
-            </Text>
-          </CardBody>
-        </Card>
-
-        <Card>
-          <CardBody>
-            <Heading as={"h3"} fontSize={"xl"}>
-              Travel
-            </Heading>
-            <Text>
-              This service facilitates you to book domestic and international
-              flights on Justdial's platform. You can also book hotels and
-              holiday packages through this section.
-            </Text>
-          </CardBody>
-        </Card>
-        <Card>
-          <CardBody>
-            <Heading as={"h3"} fontSize={"xl"}>
-              SPA & Salon
-            </Heading>
-            <Text>
-              Skip the wait to get pampered at a spa or a salon. In a few
-              clicks, 'Book an Appointment' online through Justdial before your
-              next visit.
-            </Text>
-          </CardBody>
-        </Card>
-        <Card>
-          <CardBody>
-            <Heading as={"h3"} fontSize={"xl"}>
-              Repain & Services
-            </Heading>
-            <Text>
-              Skip the wait to get pampered at a spa or a salon. In a few
-              clicks, 'Book an Appointment' online through Justdial before your
-              next visit.
-            </Text>
-          </CardBody>
-        </Card>
-        <Card>
-          <CardBody>
-            <Heading as={"h3"} fontSize={"xl"}>
-              Doctor Appointment
-            </Heading>
-            <Text>
-              Find the suitable medical specialist to take care of your health
-              and well-being. Healthcare made easy.
-            </Text>
-          </CardBody>
-        </Card>
-        <Card>
-          <CardBody>
-            <Heading as={"h3"} fontSize={"xl"}>
-              Real Estate & Property
-            </Heading>
-            <Text>
-              Discover the power of our cohesive platform for simplified
-              property searches. Whether your interest lies in PG, rentals,
-              buying, or selling, you can connect with trusted agents and
-              developers and stay updated on upcoming or trending residential
-              and commercial projects.
-            </Text>
-          </CardBody>
-        </Card>
-        <Card>
-          <CardBody>
-            <Heading as={"h3"} fontSize={"xl"}>
-              Online Recharge/Bill Payment
-            </Heading>
-            <Text>
-              With the help of this service you can stay on track in making your
-              bill payments and recharges without having to wait in a queue.
-              This includes bill payments for gas, electricity, data card, DTH,
-              landline, etc.
-            </Text>
-          </CardBody>
-        </Card>
+        {data.map((item, i) => (
+          <Card key={i}>
+            <CardBody>
+              <Heading as={"h3"} fontSize={"xl"}>
+                {item.heading}
+              </Heading>
+              <Text>{item.text}</Text>
+            </CardBody>
+          </Card>
+        ))}
       </SimpleGrid>
 
       <Text my={3}>

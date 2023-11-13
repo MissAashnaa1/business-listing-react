@@ -37,7 +37,7 @@ const SigninModal = ({ children }) => {
       setLoading(true);
 
       const res = await axios.post(
-        `http://localhost:4000/api/user/register`,
+        `${BASE_URL}/v1/api/user/register`,
         {
           username,
           email,

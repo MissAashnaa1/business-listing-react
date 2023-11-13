@@ -71,6 +71,7 @@ const Feedback = () => {
 
   return (
     <Box
+      id="contact-us"
       mt={14}
       px={{ base: 2, sm: 3, md: 6, lg: 12 }}
       display={{ base: "none", sm: "flex" }}
@@ -78,7 +79,7 @@ const Feedback = () => {
       alignItems={"center"}
       justifyContent={"center"}
     >
-      <VStack width={"70%"} s shadow={"dark-lg"} px={8} py={4} rounded={"lg"}>
+      <VStack width={"70%"} shadow={"dark-lg"} px={8} py={4} rounded={"lg"}>
         <Center mb={3}>
           <Text fontSize={"2xl"} fontWeight={"bold"}>
             Have something to say?

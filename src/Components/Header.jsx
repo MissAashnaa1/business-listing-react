@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { HiSpeakerphone } from "react-icons/hi";
 import {
   BsBell,
@@ -11,7 +11,6 @@ import {
   Button,
   ButtonGroup,
   Icon,
-  Link,
   Menu,
   MenuButton,
   MenuItem,
@@ -21,79 +20,122 @@ import {
 import { ChevronDownIcon, HamburgerIcon } from "@chakra-ui/icons";
 import LoginModal from "../modals/LoginModal";
 import SigninModal from "../modals/SigninModal";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ToggleColorMode from "./ToggleColorMode";
+import { Link } from "react-router-dom";
+import { BASE_URL } from "../constants";
+import axios from "axios";
+import { setIsAuthenticated, setUser } from "../redux/features/counter";
 
 const Header = ({ handleToggle }) => {
+  const dispatch = useDispatch();
   const { isAuthenticated, user } = useSelector((state) => state.counter);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const { data } = await axios.get(
+          `${BASE_URL}/api/v1/user/get-my-profile`,
+          {
+            withCredentials: true,
+          }
+        );
+
+        console.log(data, "< user data");
+        dispatch(setUser(data.user));
+        dispatch(setIsAuthenticated(true));
+      } catch (error) {
+        console.log(error, "< error in getting user profile");
+      } finally {
+      }
+    })();
+  }, []);
 
   return (
     <Box
+      mt={3}
+      mx={8}
       display={"flex"}
       alignItems={"center"}
       justifyContent={"space-between"}
     >
-      <Text
-        fontSize={["xl", "2xl", "3xl", "4xl"]}
-        fontFamily={"work sans"}
-        fontWeight={"bold"}
-      >
-        Business<span style={{ color: "#7E191B" }}>Listing</span>
-      </Text>
+      <Link to="/">
+        <Text
+          fontSize={["xl", "2xl", "3xl", "4xl"]}
+          fontFamily={"work sans"}
+          fontWeight={"bold"}
+        >
+          Business<span style={{ color: "#7E191B" }}>Listing</span>
+        </Text>
+      </Link>
       <Box
         display={{ base: "none", sm: "none", md: "flex" }}
         flexDir={"row"}
         alignItems={"center"}
         size="sm"
       >
-        <Link href="#">
-          <Button variant={"ghost"} size="sm" px={"1"}>
-            We are Hiring
-          </Button>
-        </Link>
-        <Link href="#">
-          <Button variant={"ghost"} size="sm" fontFamily={"work sans"} px={"1"}>
-            Investor Relations
-          </Button>
-        </Link>
-        <Link href="#">
+        <Link to="/ad-reg">
           <Button
             variant={"ghost"}
             leftIcon={<HiSpeakerphone />}
-            size="sm"
-            px={"1"}
+            size={{ base: "sm", md: "md" }}
+            pl={"1"}
           >
             Advertise
           </Button>
         </Link>
+        <Link to="/join-us">
+          <Button
+            variant={"ghost"}
+            leftIcon={<HiSpeakerphone />}
+            size={{ base: "sm", md: "md" }}
+            pl={"1"}
+          >
+            Join Us
+          </Button>
+        </Link>
         <Link href="#">
           <Button
             variant={"ghost"}
-            size="sm"
+            size={{ base: "sm", md: "md" }}
             leftIcon={<BsGraphUpArrow />}
             px={"1"}
           >
-            Free Listing
+            Listing
           </Button>
         </Link>
 
         <ButtonGroup>
-          <Button variant={"ghost"} size="sm" px={"1"}>
-            <BsBell />
-          </Button>
-          <ToggleColorMode />
+          <ToggleColorMode size={{ base: "sm", md: "md" }} />
 
           {isAuthenticated ? (
-            <Text>{user.username}</Text>
+            <>
+              <Button
+                variant={"ghost"}
+                size={{ base: "sm", md: "md" }}
+                px={"1"}
+              >
+                <BsBell />
+              </Button>
+              <Text>{user ? user.username : "-"}</Text>
+            </>
           ) : (
             <>
               <LoginModal>
-                <Button variant={"solid"} size="sm" px={"1"}>
+                <Button
+                  variant={"solid"}
+                  size={{ base: "sm", md: "md" }}
+                  px={"1"}
+                >
                   Login
                 </Button>
               </LoginModal>
               <SigninModal>
-                <Button variant={"solid"} size="sm" px={"1"}>
+                <Button
+                  variant={"solid"}
+                  size={{ base: "sm", md: "md" }}
+                  px={"1"}
+                >
                   Signup
                 </Button>
               </SigninModal>
@@ -115,12 +157,6 @@ const Header = ({ handleToggle }) => {
             <HamburgerIcon />
           </MenuButton>
           <MenuList>
-            <MenuItem as={Link} href="#">
-              We are Hiring
-            </MenuItem>
-            <MenuItem as={Link} href="#">
-              Investor Relations
-            </MenuItem>
             <MenuItem as={Link} href="#" icon={<HiSpeakerphone />}>
               Advertise
             </MenuItem>

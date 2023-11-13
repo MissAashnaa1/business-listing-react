@@ -4,6 +4,7 @@ const initialState = {
   isAuthenticated: false,
   user: {},
   isLoading: true,
+  topService: {},
 };
 
 export const counterSlice = createSlice({
@@ -25,6 +26,9 @@ export const counterSlice = createSlice({
     logout: (state) => {
       state.isAuthenticated = false;
     },
+    setTopService: (state, action) => {
+      state.topService = action.payload;
+    },
   },
 });
 
@@ -36,6 +40,7 @@ export const {
   login,
   logout,
   toggleLoading,
+  setTopService,
 } = counterSlice.actions;
 
 export default counterSlice.reducer;

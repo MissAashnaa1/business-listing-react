@@ -235,4 +235,82 @@ const travelBooking = [
   },
 ];
 
-export { images, LgCardObj, billNRecharge, travelBooking };
+import accelerate from "./assets/bl/accelerate-svgrepo-com.svg";
+import address from "./assets/bl/address-svgrepo-com.svg";
+import bank from "./assets/bl/bank-svgrepo-com.svg";
+import business from "./assets/bl/business-svgrepo-com.svg";
+import columnChart from "./assets/bl/column-chart-svgrepo-com.svg";
+import coumputer from "./assets/bl/computer-svgrepo-com.svg";
+import document from "./assets/bl/document-svgrepo-com.svg";
+import notify from "./assets/bl/notify-svgrepo-com.svg";
+import network from "./assets/bl/network-svgrepo-com.svg";
+import pieChart from "./assets/bl/pie-chart-svgrepo-com.svg";
+import thumbsUp from "./assets/bl/thumbs-up-svgrepo-com.svg";
+import trophy from "./assets/bl/trophy-svgrepo-com.svg";
+import user from "./assets/bl/user-svgrepo-com.svg";
+
+const benefits = [
+  {
+    title: "Increased Visibility",
+    content:
+      "Listing their services on a platform can significantly increase a service provider's visibility in the online marketplace. This visibility allows them to reach a larger audience of potential customers.",
+    img: address,
+  },
+  {
+    title: "Access to a Wider Customer Base",
+    content:
+      "Service providers can tap into a diverse customer base that actively uses the platform to search for services. This can be particularly advantageous for reaching new customers in different geographical areas.",
+    img: user,
+  },
+  {
+    title: "Credibility and Trust",
+    content:
+      "Being part of a reputable platform can enhance a service provider's credibility and trustworthiness in the eyes of potential customers. It's an endorsement of their services by the platform.",
+    img: thumbsUp,
+  },
+  {
+    title: "Marketing and Promotion",
+    content:
+      "Many platforms actively promote the services listed on their platform through marketing efforts. This can save service providers time and resources that they might have otherwise spent on marketing and advertising.",
+    img: columnChart,
+  },
+
+  {
+    title: "Payment Processing",
+    content:
+      "Some platforms offer integrated payment processing, making it convenient for service providers to receive payments from customers. This can help streamline their financial transactions.",
+    img: bank,
+  },
+  {
+    title: "Competitive Advantage",
+    content:
+      "Being on a platform allows service providers to stay competitive in their industry. They can keep up with competitors and adapt to changing market trends.",
+    img: accelerate,
+  },
+  {
+    title: "Legal and Regulatory Support",
+    content:
+      "Some platforms provide guidance and support on legal and regulatory compliance, which can be particularly useful for service providers in regulated industries.",
+    img: document,
+  },
+  {
+    title: "Networking Opportunities",
+    content:
+      "Being part of a platform can facilitate networking with other service providers, potentially leading to collaboration opportunities or learning from peers.",
+    img: network,
+  },
+  {
+    title: "Scalability",
+    content:
+      "As the service provider's business grows, they can easily scale their presence on the platform, add more services, or expand to new regions.",
+    img: coumputer,
+  },
+  {
+    title: "Increased Visibility",
+    content:
+      "Listing their services on a platform can significantly increase a service provider's visibility in the online marketplace. This visibility allows them to reach a larger audience of potential customers.",
+    img: notify,
+  },
+];
+
+export { images, LgCardObj, billNRecharge, travelBooking, benefits };

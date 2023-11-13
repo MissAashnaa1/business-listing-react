@@ -14,6 +14,7 @@ import Profile from "../Components/Profile";
 import { Toaster } from "react-hot-toast";
 import Feedback from "../Components/Feedback";
 import ReactGA from "react-ga";
+import TopServices from "../Components/TopServices";
 
 const Home = () => {
   const [showMain, setShowMain] = useState(true);
@@ -28,22 +29,22 @@ const Home = () => {
       {showMain ? (
         <Container maxW="100%">
           <Header handleToggle={handleToggle} />
-          <SearchComp />
-          <Box display={{ base: "none", md: "block" }}>
-            <CarouslNCards />
-          </Box>
-          <Box>
+          {/* <SearchComp /> */}
+          {/* <Box display={{ base: "none", md: "block" }}> */}
+          <CarouslNCards />
+          {/* </Box> */}
+          {/* <Box>
             <IconsComp />
-          </Box>
-          <LgCards />
-          <LgCadsTwo />
-          <SocialLinks />
-          <Divider />
+          </Box> */}
+          {/* <LgCards /> */}
+          <TopServices />
+          {/* <LgCadsTwo /> */}
+
+          <Divider my={6} />
           <Welcome />
-
           <Feedback />
-
-          <AccordionComp />
+          {/* <AccordionComp /> */}
+          <SocialLinks />
           <Footer />
         </Container>
       ) : (

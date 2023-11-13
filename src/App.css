@@ -1,3 +1,15 @@
 * {
   font-family: "work sans", sans-serif;
 }
+
+.banner-service-provider-reg {
+  background-image: url("./assets/bl/tree-svgrepo-com.svg");
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+
+  background-size: contain;
+}
+
+/* //meet vo hi?
+hanji */
