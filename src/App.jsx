@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import "./App.css";
 import Home from "./Pages/Home";
 import io from "socket.io-client";
-import ReactGA from "react-ga";
+import ReactGA from "react-ga4";
 import { ANALYTICS_ID } from "./constants";
 import {
   BrowserRouter as Router,
@@ -17,6 +17,7 @@ import Developers from "./Components/Developers";
 import TopService from "./Components/TopService";
 
 ReactGA.initialize(ANALYTICS_ID);
+ReactGA.send({ hitType: "pageview", page: window.location.pathname });
 
 const socket = io("http://localhost:4000");
 
