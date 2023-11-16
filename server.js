@@ -3,20 +3,29 @@ const { connectDB } = require("./config/db");
 
 connectDB();
 
+// server
 const port = process.env.PORT || 4000;
 const server = app.listen(port, (error) => {
   if (error) console.log(error);
   console.log("Server running on port " + port);
 });
 
+// Socket.io cors setup
 const io = require("socket.io")(server, {
   pingTimout: 60000,
   cors: {
-    origin: [process.env.FRONTEND_URL, "http://localhost:5174"],
+    origin: [
+      process.env.FRONTEND_URL,
+      process.env.FRONTEND_URL2,
+      process.env.FRONTEND_URL_HOSTED,
+    ],
   },
 });
 
+// below line is to make "io" available in routes
 app.set("io", io);
+
+// socket.io connection
 io.on("connection", (socket) => {
   console.log("A user connected to WebSocket", socket.id);
 

@@ -8,67 +8,40 @@ const AdBanner = require("../models/adBanner");
 const AdPlans = require("../models/adPlans");
 const AppliedAds = require("../models/appliedAds");
 const User = require("../models/user");
+const { default: ErrorHandler } = require("../middlewares/error");
 
-const loginAdmin = async (req, res) => {
+const loginAdmin = async (req, res, next) => {
   const { username, password } = req.body;
-  if (!username || !password) {
-    return res
-      .status(400)
-      .json({ success: false, msg: "Please provide username and password" });
-  }
+  if (!username || !password)
+    return next(new ErrorHandler("Please provide username and password", 400));
 
-  try {
-    console.log(username, password);
-    const admin = await Admin.findOne({ username }).select("+password");
-    if (!admin) {
-      return res
-        .status(404)
-        .json({ success: false, msg: "Admin does not exist." });
-    }
+  const admin = await Admin.findOne({ username }).select("+password");
+  if (!admin) return next(new ErrorHandler("Admin does not exist.", 404));
 
-    const isMatch = await bcrypt.compare(password, admin.password);
-    if (!isMatch) {
-      return res
-        .status(404)
-        .json({ success: false, msg: "Invalid credentials" });
-    }
-    sendAdminCookies(res, admin, "Admin logged in successfully", 200);
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({ success: false, msg: "Server error", err });
-  }
+  const isMatch = await bcrypt.compare(password, admin.password);
+  if (!isMatch) return next(new ErrorHandler("Invalid credentials", 404));
+
+  sendAdminCookies(res, admin, "Admin logged in successfully", 200);
 };
 
-const createProfile = async (req, res) => {
+const createProfile = async (req, res, next) => {
   const { username, password, picURL, role } = req.body;
-  if (!username || !password || !role) {
-    return res.status(400).json({
-      success: false,
-      msg: "Please provide username, password and role",
-    });
-  }
+
+  if (!username || !password || !role)
+    return next(new ErrorHandler("Please provide username and password", 400));
 
   const admin = await Admin.findOne({ username });
-  if (admin) {
-    return res.status(400).json({
-      success: false,
-      msg: "Admin already exists",
-    });
-  }
+  if (admin) return next(new ErrorHandler("Admin already exists", 400));
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  try {
-    const admin = await Admin.create({
-      username,
-      password: hashedPassword,
-      picURL,
-      role,
-    });
-    sendAdminCookies(res, admin, "Admin created successfully!", 201);
-  } catch (err) {
-    res.status(500).json({ success: false, msg: "Server error" });
-  }
+  const newAdmin = await Admin.create({
+    username,
+    password: hashedPassword,
+    picURL,
+    role,
+  });
+  sendAdminCookies(res, newAdmin, "Admin created successfully!", 201);
 };
 
 const logout = async (req, res) => {
@@ -80,12 +53,8 @@ const logout = async (req, res) => {
 };
 
 const getAdmin = async (req, res) => {
-  try {
-    const admin = await Admin.findById(req.admin._id).select("-password");
-    res.status(200).json({ success: true, admin });
-  } catch (err) {
-    res.status(500).json({ success: false, msg: "Server error" });
-  }
+  const admin = await Admin.findById(req.admin._id).select("-password");
+  res.status(200).json({ success: true, admin });
 };
 
 const getAdminProfile = async (req, res) => {
@@ -93,45 +62,29 @@ const getAdminProfile = async (req, res) => {
 };
 
 const getAdmins = async (req, res) => {
-  try {
-    const admins = await Admin.find({}).select("-password");
-    res.status(200).json({ success: true, admins });
-  } catch (err) {
-    res.status(500).json({ success: false, msg: "Server error" });
-  }
+  const admins = await Admin.find({}).select("-password");
+  res.status(200).json({ success: true, admins });
 };
 
 const getAdminById = async (req, res) => {
-  try {
-    const admin = await Admin.findById(req.params.id).select("-password");
-    res.status(200).json({ success: true, admin });
-  } catch (err) {
-    res.status(500).json({ success: false, msg: "Server error" });
-  }
+  const admin = await Admin.findById(req.params.id).select("-password");
+  res.status(200).json({ success: true, admin });
 };
 
-const updateSiteSettings = async (req, res) => {
+const updateSiteSettings = async (req, res, next) => {
   const { settingKey, settingValue } = req.body;
-  if (settingKey === undefined || settingValue === undefined) {
-    return res.status(400).json({
-      success: false,
-      msg: "Please provide settings",
-    });
-  }
-  try {
-    const updatedSettings = await SiteSettings.findOneAndUpdate(
-      { settingKey: settingKey },
-      { settingValue: settingValue },
-      { new: true, upsert: true }
-    );
+  if (settingKey === undefined || settingValue === undefined)
+    return next(new ErrorHandler("Please provide settings", 400));
 
-    res
-      .status(200)
-      .json({ success: true, msg: "Settings updated", updatedSettings });
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({ success: false, msg: "Server error", error: err });
-  }
+  const updatedSettings = await SiteSettings.findOneAndUpdate(
+    { settingKey: settingKey },
+    { settingValue: settingValue },
+    { new: true, upsert: true }
+  );
+
+  res
+    .status(200)
+    .json({ success: true, msg: "Settings updated", updatedSettings });
 };
 
 const getMessages = async (req, res) => {
@@ -146,83 +99,53 @@ const getMessages = async (req, res) => {
 };
 
 const getAdBannersAdmin = async (req, res) => {
-  try {
-    const adBanners = await AdBanner.find({}).sort({ createdAt: -1 });
-    res.status(200).json({ success: true, adBanners });
-  } catch (err) {
-    res.status(500).json({ success: false, msg: "Server error" });
-  }
+  const adBanners = await AdBanner.find({}).sort({ createdAt: -1 });
+  res.status(200).json({ success: true, adBanners });
 };
 
 const getAdPlans = async (req, res) => {
-  try {
-    const plans = await AdPlans.find();
-    res.json({ success: true, plans: plans });
-  } catch (error) {
-    res.status(500).json({ msg: "Interval server error", error: error });
-  }
+  const plans = await AdPlans.find();
+  res.json({ success: true, plans: plans });
 };
 
-const createAdPlans = async (req, res) => {
+const createAdPlans = async (req, res, next) => {
   const { name, price, durationDays } = req.body;
-  if (!name || !price || !durationDays) {
-    return res
-      .status(400)
-      .json({ success: false, msg: "Please enter all fields" });
-  }
-  try {
-    const newPlan = await AdPlans.create({ name, price, durationDays });
-    res.status(201).json({ success: true, newPlan });
-  } catch (error) {
-    console.log(error, "error in createAdPlans");
-    res.status(500).json({ msg: "Internal Server Error" });
-  }
+  if (!name || !price || !durationDays)
+    return next(new ErrorHandler("Please enter all fields", 400));
+
+  const newPlan = await AdPlans.create({ name, price, durationDays });
+  res.status(201).json({ success: true, newPlan });
 };
 
-const deleteAdPlan = async (req, res) => {
+const deleteAdPlan = async (req, res, next) => {
   const { id } = req.params;
   console.log(req.params, "params");
-  if (!id) {
-    return res.status(400).json({ success: false, msg: "Please enter id" });
-  }
-  try {
-    const deletedPlan = await AdPlans.findByIdAndDelete(id);
-    res.status(201).json({ success: true, deletedPlan });
-  } catch (error) {
-    console.log(error, "error in deleteAdPlan");
-    res.status(500).json({ msg: "Internal Server Error" });
-  }
+  if (!id) return next(new ErrorHandler("Please enter id", 400));
+
+  const deletedPlan = await AdPlans.findByIdAndDelete(id);
+  res.status(201).json({ success: true, deletedPlan });
 };
 
 const getAppliedAdsAll = async (req, res) => {
-  try {
-    let appliedAds = await AppliedAds.find({}).populate("adPlanId").sort({
-      createdAt: -1,
-    });
+  let appliedAds = await AppliedAds.find({}).populate("adPlanId").sort({
+    createdAt: -1,
+  });
 
-    appliedAds = await User.populate(appliedAds, {
-      path: "userId",
-      select: "username email",
-    });
-    return res.json({ success: true, appliedAds: appliedAds });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({ msg: "Internal server error", error: error });
-  }
+  appliedAds = await User.populate(appliedAds, {
+    path: "userId",
+    select: "username email",
+  });
+  return res.json({ success: true, appliedAds: appliedAds });
 };
 
 const approveAd = async (req, res) => {
   const { id, status } = req.body;
 
-  try {
-    const ad = await AppliedAds.findById(id);
-    ad.isApproved = status;
+  const ad = await AppliedAds.findById(id);
+  ad.isApproved = status;
 
-    await ad.save();
-    return res.json({ success: true, msg: "Ad approved" });
-  } catch (error) {
-    console.log(error);
-  }
+  await ad.save();
+  return res.json({ success: true, msg: "Ad approved" });
 };
 
 module.exports = {

@@ -2,8 +2,9 @@ const ServiceProvider = require("../models/serviceProvider");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { sendVerificationEMail } = require("../utils/sendEMail");
+const { default: ErrorHandler } = require("../middlewares/error");
 
-const registerServiceProvider = async (req, res) => {
+const registerServiceProvider = async (req, res, next) => {
   const {
     firstName,
     lastName,
@@ -34,60 +35,55 @@ const registerServiceProvider = async (req, res) => {
     !serviceName ||
     !website ||
     !about
-  ) {
-    return res.status(400).json({ msg: "Please enter all fields" });
+  )
+    return next(new ErrorHandler("Please enter all fields", 400));
+
+  const serviceProvider = await ServiceProvider.findOne({ email });
+
+  if (serviceProvider) {
+    return res.status(400).json({ msg: "User already exists" });
   }
 
-  try {
-    const serviceProvider = await ServiceProvider.findOne({ email });
+  const hashedPassword = await bcrypt.hash(password, 10);
 
-    if (serviceProvider) {
-      return res.status(400).json({ msg: "User already exists" });
-    }
+  const newServiceProvider = await ServiceProvider.create({
+    firstName,
+    lastName,
+    contact: phone,
+    email,
+    password: hashedPassword,
+    address: {
+      street: stAddress,
+      city,
+      state,
+      zip,
+    },
+    service: {
+      category,
+      serviceName,
+      website,
+      about,
+    },
+  });
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+  sendVerificationEMail(firstName, lastName, email, newServiceProvider._id);
 
-    const newServiceProvider = await ServiceProvider.create({
-      firstName,
-      lastName,
-      contact: phone,
-      email,
-      password: hashedPassword,
-      address: {
-        street: stAddress,
-        city,
-        state,
-        zip,
-      },
-      service: {
-        category,
-        serviceName,
-        website,
-        about,
-      },
-    });
+  const token = jwt.sign(
+    { id: newServiceProvider._id },
+    process.env.JWT_SECRET
+  );
 
-    sendVerificationEMail(firstName, lastName, email, newServiceProvider._id);
+  res.cookie("token", token, {
+    httpOnly: true,
+    maxAge: 24 * 60 * 60 * 1000,
+  });
 
-    const token = jwt.sign(
-      { id: newServiceProvider._id },
-      process.env.JWT_SECRET
-    );
-
-    res.cookie("token", token, {
-      httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000,
-    });
-
-    res.status(201).json({
-      success: true,
-      msg: "User created successfully!",
-      token,
-      user: newServiceProvider,
-    });
-  } catch (error) {
-    console.log(error);
-  }
+  res.status(201).json({
+    success: true,
+    msg: "User created successfully!",
+    token,
+    user: newServiceProvider,
+  });
 };
 
 module.exports = {

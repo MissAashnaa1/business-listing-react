@@ -2,14 +2,12 @@ const axios = require("axios");
 const todayDate = require("../utils/todayDate");
 const QueryMsg = require("../models/query");
 const { sendEMail } = require("../utils/sendEMail");
+const { default: ErrorHandler } = require("../middlewares/error");
 
-const mailHandler = async (req, res) => {
+const mailHandler = async (req, res, next) => {
   const { firstName, lastName, email, message } = req.body;
-  if (!firstName || !lastName || !email || !message) {
-    return res
-      .status(400)
-      .json({ success: false, msg: "Please provide all the details" });
-  }
+  if (!firstName || !lastName || !email || !message)
+    return next(new ErrorHandler("Please provide all the details", 400));
 
   // const newMsg = await QueryMsg.create({
   //   firstName,
