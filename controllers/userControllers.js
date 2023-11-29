@@ -25,6 +25,7 @@ const loginUser = async (req, res, next) => {
   const { username, password } = req.body;
 
   let user = await User.findOne({ username }).select("+password");
+  console.log(user);
 
   if (!user) return next(new ErrorHandler("User does not exist!", 404));
 
@@ -36,6 +37,7 @@ const loginUser = async (req, res, next) => {
 };
 
 const getMyProfile = async (req, res) => {
+  console.log({ success: true, user: req.user });
   res.status(200).json({ success: true, user: req.user });
 };
 
@@ -120,6 +122,7 @@ const applyForAd = async (req, res, next) => {
 };
 
 const getAppliedAds = async (req, res) => {
+  if (!req.user) return;
   const appliedAds = await AppliedAds.find({ userId: req.user._id })
     .populate("adPlanId")
     .sort({

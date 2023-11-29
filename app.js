@@ -3,6 +3,9 @@ const app = express();
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const dotenv = require("dotenv");
+const helmet = require("helmet");
+const NodeCache = require("node-cache");
+const nodeCache = new NodeCache({ stdTTL: 100 });
 const {
   errorMiddleware,
   default: ErrorHandler,
@@ -13,6 +16,7 @@ dotenv.config();
 
 // middlewares
 app.set("view engine", "ejs");
+app.use(helmet());
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
@@ -49,4 +53,4 @@ app.all("*", (req, res, next) => {
 // error handling
 app.use(errorMiddleware);
 
-module.exports = { app };
+module.exports = { app, nodeCache };
